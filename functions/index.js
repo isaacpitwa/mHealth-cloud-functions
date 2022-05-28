@@ -38,9 +38,11 @@ app.post("/users/add/", (request, response) => {
 
 app.post("/users/update/:uid", (request, response) => {
   const db = admin.firestore();
+  console.log(request.params.uid);
   db.collection("users")
       .where("uid", "==", request.params.uid).get().then(
           (snapshot)=>{
+            console.log(snapshot);
             snapshot.forEach((doc) => {
               db.collection("users").doc(doc.id).update(
                   request.body
