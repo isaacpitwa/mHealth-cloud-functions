@@ -36,14 +36,13 @@ app.post("/users/add/", (request, response) => {
 });
 
 
-app.post("/users/update/:uid", (request, response) => {
+app.post("/users/update/:email", (request, response) => {
   const db = admin.firestore();
-  console.log("Updating User => ", request.params.uid);
+  console.log("Updating User => ", request.params.email);
   db.collection("users")
-      .where("uid", "==", request.params.uid).get().then(
+      .where("email", "==", request.params.email).get().then(
           (snapshot)=>{
-            console.log(snapshot);
-            snapshot.forEach((doc) => {
+            snapshot.docs.forEach((doc) => {
               console.log("Updating doc : =>", doc.id);
               db.collection("users").doc(doc.id).update(
                   request.body
@@ -57,7 +56,9 @@ app.post("/users/update/:uid", (request, response) => {
             );
             response.send({
               message: "Completed updating",
-              changed: snapshot,
+              changed: snapshot.docs,
+              requested: request.body,
+              email: request.params.email,
             });
           }) .catch((error) => {
         response.send({
