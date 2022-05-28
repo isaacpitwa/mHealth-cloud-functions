@@ -35,6 +35,39 @@ app.post("/users/add/", (request, response) => {
   });
 });
 
+
+app.post("/users/update/:uid", (request, response) => {
+  const db = admin.firestore();
+  db.collection("users")
+      .where("userId", "==", request.params.uid).get().then(
+          (snapshot)=>{
+            snapshot.forEach((doc) => {
+              db.collection("users").doc(doc.id).update(
+                  request.body
+              )
+                  .then((snapshot) => {
+                    const newelement = {
+                      "id": snapshot.id,
+                      "data": snapshot.data(),
+                    };
+                    response.send(newelement);
+                    return "";
+                  }).catch((reason) => {
+                    response.send(reason);
+                  });
+            }
+            )
+
+                .catch((error) => {
+                  response.send({
+                    error: error.message,
+                    message: "Failed to add User to collection",
+                  });
+                });
+          });
+});
+
+
 app.get("/users", (request, response) => {
   let stuff = [];
   const db = admin.firestore();
