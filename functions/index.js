@@ -300,6 +300,25 @@ app.get("/messages/:email", (request, response)=> {
       });
 });
 
+app.post("/messages", (request, response)=> {
+  const db = admin.firestore();
+  db.collection("messages").add(request.body).then(
+      (docRef) => {
+        response.send({
+          message: "Document created",
+        }
+        );
+        return "";
+      }
+
+  ).catch((error) => {
+    response.send({
+      error: error.message,
+      message: "Failed to add User to collection",
+    });
+  });
+});
+
 app.get("/chat/:email/:email2", (request, response)=> {
   const db = admin.firestore();
   db.collection("messages")
