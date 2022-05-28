@@ -289,7 +289,12 @@ app.get("/messages/:email", (request, response)=> {
                       console.log("====> To Messages", snapshot2.docs.length );
                       const messages = snapshot.docs.concat(snapshot2.docs)
                           .map((doc)=>doc.data());
-                      return response.send(messages);
+                      return response.send(
+                          messages.filter(
+                              (value, index, self) => index === self.findIndex(
+                                  (t) => (
+                                    t.to.email === value.to.email ||
+                                    t.to.email === value.from.email))));
                     }
                 ).catch((reason) => {
                   response.send(reason);
@@ -341,6 +346,7 @@ app.post("/messages", (request, response)=> {
                         response.send({
                           message: "Message created",
                           notification: "Notification sent succcessfully",
+                          NotificationReponse: message.results,
                         }
                         );
                       }
@@ -374,7 +380,8 @@ app.get("/chat/:email/:email2", (request, response)=> {
                       const messages = snapshot.docs
                           .concat(snapshot2.docs)
                           .map((doc)=>doc.data());
-                      return response.send(messages.sort((a, b)=>a-b));
+                      return response.send(
+                          messages.sort((a, b)=>a.createdAt-b.createdAt));
                     }
                 ).catch((reason) => {
                   response.send(reason);
