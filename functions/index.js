@@ -334,7 +334,7 @@ app.post("/messages", (request, response)=> {
                     },
                   };
                   const tokens = snapshot.docs.map(
-                      (user)=>user.data().fcmtoken);
+                      (user)=>user.data().fcmToken);
                   admin.messaging().sendToDevice(tokens, payload).then(
                       (message)=>{
                         response.send({
