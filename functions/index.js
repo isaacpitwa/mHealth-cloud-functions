@@ -335,6 +335,7 @@ app.post("/messages", (request, response)=> {
                   };
                   const tokens = snapshot.docs.map(
                       (user)=>user.data().fcmToken);
+                  console.log("Tokens=>", tokens);
                   admin.messaging().sendToDevice(tokens, payload).then(
                       (message)=>{
                         response.send({
@@ -370,9 +371,10 @@ app.get("/chat/:email/:email2", (request, response)=> {
                 .where("from.email", "==", request.params.email2).get().then(
                     (snapshot2)=>{
                       console.log("====> To Messages", snapshot2.docs.length );
-                      const messages = snapshot.docs.concat(snapshot2.docs)
+                      const messages = snapshot.docs
+                          .concat(snapshot2.docs)
                           .map((doc)=>doc.data());
-                      return response.send(messages);
+                      return response.send(messages.sort((a, b)=>a-b));
                     }
                 ).catch((reason) => {
                   response.send(reason);
