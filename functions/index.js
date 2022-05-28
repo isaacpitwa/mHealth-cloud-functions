@@ -53,18 +53,16 @@ app.post("/users/update/:uid", (request, response) => {
                     response.send(reason);
                   });
             }
-            )
-
-                .catch((error) => {
-                  response.send({
-                    error: error.message,
-                    message: "Failed to add User to collection",
-                  });
-                });
+            );
             response.send({
               message: "Completed updating",
             });
-          });
+          }) .catch((error) => {
+        response.send({
+          error: error.message,
+          message: "Failed to add User to collection",
+        });
+      });
 });
 
 
