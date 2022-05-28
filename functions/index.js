@@ -35,6 +35,22 @@ app.post("/users/add/", (request, response) => {
   });
 });
 
+app.post("/users/:email", (request, response) => {
+  const db = admin.firestore();
+  db.collection("users").where("email", "==", request.params.email).get().then(
+      (docRef) => {
+        response.send(docRef.docs[0].data());
+        return "";
+      }
+
+  ).catch((error) => {
+    response.send({
+      error: error.message,
+      message: "Failed to add User to collection",
+    });
+  });
+});
+
 
 app.post("/users/update/:email", (request, response) => {
   const db = admin.firestore();
