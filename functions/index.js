@@ -316,12 +316,37 @@ app.post("/messages", (request, response)=> {
   delete request.body.emailTo,
   delete request.body.nameTo,
 
+
   db.collection("messages").add(request.body).then(
       (docRef) => {
-        response.send({
-          message: "Document created",
-        }
-        );
+        db.collection("users")
+            .where("email", "==", request.body.to.email).get().then(
+                (snapshot)=>{
+                  const payload = {
+                    "notification": {
+                      "title": ` 1 Message From ${request.body.from.name}`,
+                      "body": request.body.message,
+                      "sound": "default",
+                    },
+                    "data": {
+                      "sendername": `mHealth- ${request.body.from.name}`,
+                      "message": request.body.message,
+                    },
+                  };
+                  const tokens = snapshot.docs.map(
+                      (user)=>user.data().fcmtoken);
+                  admin.messaging().sendToDevice(tokens, payload).then(
+                      (message)=>{
+                        response.send({
+                          message: "Message created",
+                          notification: "Notification sent succcessfully",
+                        }
+                        );
+                      }
+                  );
+                }
+            );
+
         return "";
       }
 
