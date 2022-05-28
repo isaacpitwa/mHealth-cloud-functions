@@ -302,7 +302,7 @@ app.get("/messages/:email", (request, response)=> {
 
 app.post("/messages", (request, response)=> {
   const db = admin.firestore();
-  request.body.createdAt = Date.now();
+  request.body.createdAt =Date.now();
   request.body.to = {
     email: request.body.emailTo,
     name: request.body.nameTo,
@@ -337,12 +337,14 @@ app.get("/chat/:email/:email2", (request, response)=> {
   const db = admin.firestore();
   db.collection("messages")
       .where("from.email", "==", request.params.email)
-      .where("to.email", "==", request.params.email2).get().then(
+      .where("to.email", "==", request.params.email2)
+      .orderBy("createdAt", "desc").get().then(
           (snapshot)=>{
             console.log("====> From Mesages", snapshot.docs.length );
             db.collection("messages")
                 .where("to.email", "==", request.params.email)
-                .where("from.email", "==", request.params.email2).get().then(
+                .where("from.email", "==", request.params.email2)
+                .orderBy("createdAt", "desc").get().then(
                     (snapshot2)=>{
                       console.log("====> To Messages", snapshot2.docs.length );
                       const messages = snapshot.docs.concat(snapshot2.docs)
