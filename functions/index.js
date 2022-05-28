@@ -302,6 +302,7 @@ app.get("/messages/:email", (request, response)=> {
 
 app.post("/messages", (request, response)=> {
   const db = admin.firestore();
+  request.body.createdAt = Date.now();
   db.collection("messages").add(request.body).then(
       (docRef) => {
         response.send({
