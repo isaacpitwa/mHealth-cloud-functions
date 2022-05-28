@@ -362,14 +362,12 @@ app.get("/chat/:email/:email2", (request, response)=> {
   const db = admin.firestore();
   db.collection("messages")
       .where("from.email", "==", request.params.email)
-      .where("to.email", "==", request.params.email2)
-      .orderBy("createdAt", "desc").get().then(
+      .where("to.email", "==", request.params.email2).get().then(
           (snapshot)=>{
             console.log("====> From Mesages", snapshot.docs.length );
             db.collection("messages")
                 .where("to.email", "==", request.params.email)
-                .where("from.email", "==", request.params.email2)
-                .orderBy("createdAt", "desc").get().then(
+                .where("from.email", "==", request.params.email2).get().then(
                     (snapshot2)=>{
                       console.log("====> To Messages", snapshot2.docs.length );
                       const messages = snapshot.docs.concat(snapshot2.docs)
