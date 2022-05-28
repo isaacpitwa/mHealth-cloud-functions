@@ -277,4 +277,25 @@ app.get("/appointments/:serviceProvider/", (request, response) => {
 //       });
 // });
 
+app.get("/messages/:email", (request, response)=> {
+  const db = admin.firestore();
+  db.collection("messages")
+      .where("from.email", "==", request.params.email).get().then(
+          (snapshot)=>{
+            db.collection("messages")
+                .where("to.email", "==", request.params.email).get().then(
+                    (snapshot2)=>{
+                      const messages = snapshot.docs.concat(snapshot2.docs)
+                          .map((doc)=>doc.data());
+                      return response.send(messages);
+                    }
+                ).catch((reason) => {
+                  response.send(reason);
+                });
+          }
+      ).catch((reason) => {
+        response.send(reason);
+      });
+});
+
 exports.api = functions.https.onRequest(app);
