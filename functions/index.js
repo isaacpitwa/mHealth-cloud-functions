@@ -85,7 +85,7 @@ app.post("/users/update/:email", (request, response) => {
 });
 
 
-app.get("/users", (request, response) => {
+app.get("/users/users/:email", (request, response) => {
   let stuff = [];
   const db = admin.firestore();
   db.collection("users").get()
@@ -96,7 +96,8 @@ app.get("/users", (request, response) => {
             "data": doc.data(),
           };
           console.log(newelement);
-          stuff = stuff.concat(newelement);
+          stuff = doc.data().email !=request.params.email?
+          stuff.concat(newelement):stuff;
         });
         console.log(stuff);
         response.send(stuff);
