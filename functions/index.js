@@ -358,7 +358,7 @@ app.post("/messages", (request, response)=> {
                   const tokens = snapshot.docs.map(
                       (user)=>user.data().fcmToken);
                   console.log("Tokens=>", tokens);
-                  admin.messaging().sendToDevice(tokens, payload).then(
+                  admin.messaging().sendToDevice(tokens[0], payload).then(
                       (message)=>{
                         response.send({
                           message: "Message created",
