@@ -6,23 +6,23 @@
 
 ## Built With
 
-- React
-- React-Redux
-- Jsx
-- Webpack
+- Node JS
+- Express
+- Firebase Firestore
+- FIrebase Authentication
 - GitFlow
 - Javascript
 
 ## Development set up
 Clone Repository  using 
-`git@github.com:isaacpitwa/covid19-tracking.git` 
+`git@github.com:isaacpitwa/mHealth-cloud-functions.git` 
 
 OR  using HTTPS
 
-`https://github.com/isaacpitwa/covid19-tracking.git` 
+`https://github.com/isaacpitwa/mHealth-cloud-functions.git` 
 
 move into project directory
-`cd covid19-tracking`
+`cd mHealth-cloud-functions`
 
 Install  Project dependancies using `NPM`
 
