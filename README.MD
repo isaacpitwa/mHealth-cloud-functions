@@ -1,6 +1,6 @@
-# COVID 19 Tracking
+# mHealth-cloud-functions
 
-> The Covid-19 Tracking Project collects and shows  information from different data sources to provide comprehensive data for the novel coronavirus, SARS-CoV-2.
+> The mHealth-cloud-functions holds the code base for the firefcuntions including cloud APIS with the specific backend logic required for fulll functionality of the application.
 
 
 
