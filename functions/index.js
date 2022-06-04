@@ -188,6 +188,7 @@ app.post("/appointments", (request, response) => {
       (docRef) => {
         response.send({
           message: "Appointment created",
+          id: docRef.id,
         }
 
         );
