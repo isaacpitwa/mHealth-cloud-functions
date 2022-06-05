@@ -216,7 +216,7 @@ app.get("/appointments/details/:id", (request, response) => {
   });
 });
 
-app.put("/appointments/details/:id", (request, response) => {
+app.post("/appointments/details/:id", (request, response) => {
   const db = admin.firestore();
   db.collection("appointments").doc(request.params.id).update(
       request.body
