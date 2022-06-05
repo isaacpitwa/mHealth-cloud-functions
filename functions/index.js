@@ -110,6 +110,11 @@ app.get("/users/users/:email", (request, response) => {
 app.post("/serviceproviders", (request, response) => {
   const db = admin.firestore();
   const serviceProvider = request.body;
+  request.body.created_at = Date.now();
+  request.body.type = {
+    _latitude: 0.33249,
+    _longitude: 32.565842,
+  };
   db.collection("service_providers").add(serviceProvider).then(
       (docRef) => {
         response.send({
@@ -186,13 +191,35 @@ app.post("/appointments", (request, response) => {
   const appointment = request.body;
   db.collection("appointments").add(appointment).then(
       (docRef) => {
-        response.send({
-          message: "Appointment created",
-          id: docRef.id,
-        }
-
-        );
-        return "";
+        db.collection("users")
+            .where("email"
+                , "==", request.body.serviceProvider_email).get().then(
+                (snapshot)=>{
+                  const payload = {
+                    "notification": {
+                      "title": `${request.body.service} Appointment`,
+                      "body": `Hello Dr ${request.body.serviceProvider_name} \n 
+                              You have a new ${request.body.service}
+                               Appointment booking Regietered`,
+                      "sound": "default",
+                    },
+                    "data": {
+                      "appointment": request.body,
+                    },
+                  };
+                  const tokens = snapshot.docs.map(
+                      (user)=>user.data().fcmToken);
+                  console.log("Tokens=>", tokens);
+                  admin.messaging().sendToDevice(tokens[0], payload).then(
+                      (message)=>{
+                        response.send({
+                          message: "Appointment created",
+                          id: docRef.id,
+                        });
+                      }
+                  );
+                }
+            );
       }
   ).catch((error) => {
     response.send({
@@ -237,7 +264,7 @@ app.get("/appointments/:userId/:status/", (request, response) => {
   let stuff = [];
   const db = admin.firestore();
   db.collection("appointments")
-      .where("userId", "==", request.params.userId)
+      .where("user_uid", "==", request.params.userId)
       .where("status", "==", request.params.status)
       .get().then((snapshot) => {
         snapshot.forEach((doc) => {
@@ -329,15 +356,19 @@ app.post("/messages", (request, response)=> {
   request.body.to = {
     email: request.body.emailTo,
     name: request.body.nameTo,
+    image: request.body.imageTo,
   };
   request.body.from = {
     email: request.body.emailFrom,
     name: request.body.nameFrom,
+    image: request.body.imageFrom,
   };
   delete request.body.emailFrom,
   delete request.body.nameFrom,
   delete request.body.emailTo,
   delete request.body.nameTo,
+  delete request.body.imageTo,
+  delete request.body.imageFrom,
 
 
   db.collection("messages").add(request.body).then(
