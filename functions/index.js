@@ -281,12 +281,54 @@ app.get("/appointments/:userId/:status/", (request, response) => {
       });
 });
 
+app.get("/appointments/:userId/", (request, response) => {
+  let stuff = [];
+  const db = admin.firestore();
+  db.collection("appointments")
+      .where("user_uid", "==", request.params.userId)
+      .where("status", "!=", "Pending")
+      .get().then((snapshot) => {
+        snapshot.forEach((doc) => {
+          const newelement = {
+            "id": doc.id,
+            "data": doc.data(),
+          };
+          stuff = stuff.concat(newelement);
+        });
+        response.send(stuff);
+        return "";
+      }).catch((reason) => {
+        response.send(reason);
+      });
+});
+
 app.get("/doctor/appointments/:doctorEmail/:status/", (request, response) => {
   let stuff = [];
   const db = admin.firestore();
   db.collection("appointments")
       .where("serviceProvider_email", "==", request.params.doctorEmail)
       .where("status", "==", request.params.status)
+      .get().then((snapshot) => {
+        snapshot.forEach((doc) => {
+          const newelement = {
+            "id": doc.id,
+            "data": doc.data(),
+          };
+          stuff = stuff.concat(newelement);
+        });
+        response.send(stuff);
+        return "";
+      }).catch((reason) => {
+        response.send(reason);
+      });
+});
+
+app.get("/doctor/appointments/:doctorEmail", (request, response) => {
+  let stuff = [];
+  const db = admin.firestore();
+  db.collection("appointments")
+      .where("serviceProvider_email", "==", request.params.doctorEmail)
+      .where("status", "!=", "Pending")
       .get().then((snapshot) => {
         snapshot.forEach((doc) => {
           const newelement = {
