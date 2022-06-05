@@ -281,7 +281,7 @@ app.get("/appointments/:userId/:status/", (request, response) => {
       });
 });
 
-app.get("/appointments/:userId/", (request, response) => {
+app.get("/appoints/:userId/", (request, response) => {
   let stuff = [];
   const db = admin.firestore();
   db.collection("appointments")
@@ -323,7 +323,7 @@ app.get("/doctor/appointments/:doctorEmail/:status/", (request, response) => {
       });
 });
 
-app.get("/doctor/appointments/:doctorEmail", (request, response) => {
+app.get("/doctor/appoints/:doctorEmail", (request, response) => {
   let stuff = [];
   const db = admin.firestore();
   db.collection("appointments")
